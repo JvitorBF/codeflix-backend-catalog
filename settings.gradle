@@ -1,0 +1,5 @@
+rootProject.name = 'adm-do-catalogo'
+include 'domain'
+include 'application'
+include 'infrastructure'
+
