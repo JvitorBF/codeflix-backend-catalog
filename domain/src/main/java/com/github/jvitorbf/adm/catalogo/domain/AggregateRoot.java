@@ -1,0 +1,8 @@
+package com.github.jvitorbf.adm.catalogo.domain;
+
+public class AggregateRoot<ID extends Identifier> extends Entity<ID>{
+
+    protected AggregateRoot(final ID id) {
+        super(id);
+    }
+}
