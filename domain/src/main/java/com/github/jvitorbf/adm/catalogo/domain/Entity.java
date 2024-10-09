@@ -1,5 +1,7 @@
 package com.github.jvitorbf.adm.catalogo.domain;
 
+import com.github.jvitorbf.adm.catalogo.domain.validation.ValidationHandler;
+
 import java.util.Objects;
 
 public abstract class Entity<ID extends Identifier> {
@@ -8,6 +10,12 @@ public abstract class Entity<ID extends Identifier> {
     protected Entity(final ID id) {
         Objects.requireNonNull(id, "ID should not be null!");
         this.id = id;
+    }
+
+    public abstract void validate(ValidationHandler handler);
+
+    public ID getId() {
+        return id;
     }
 
     @Override
