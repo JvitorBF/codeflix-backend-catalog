@@ -1,17 +1,18 @@
 package com.github.jvitorbf.adm.catalogo.domain.category;
 
 import com.github.jvitorbf.adm.catalogo.domain.AggregateRoot;
+import com.github.jvitorbf.adm.catalogo.domain.validation.ValidationHandler;
 
 import java.time.Instant;
 
 
 public class Category extends AggregateRoot<CategoryID> {
-    private final String name;
-    private final String description;
-    private final boolean isActive;
-    private final Instant createdAt;
-    private final Instant updatedAt;
-    private final Instant deletedAt;
+    private String name;
+    private String description;
+    private boolean isActive;
+    private Instant createdAt;
+    private Instant updatedAt;
+    private Instant deletedAt;
 
     private Category(
             final CategoryID anId,
@@ -33,7 +34,30 @@ public class Category extends AggregateRoot<CategoryID> {
     public static Category newCategory(final String aName, final String aDescription, final boolean aIsActive) {
         final var id = CategoryID.unique();
         final var now = Instant.now();
-        return new Category(id, aName, aDescription, aIsActive, now, now, null);
+        final var deletedAt = aIsActive ? null : now;
+        return new Category(id, aName, aDescription, aIsActive, now, now, deletedAt);
+    }
+
+    @Override
+    public void validate(final ValidationHandler handler) {
+        new CategoryValidator(this, handler).validate();
+    }
+
+    public Category activate() {
+        this.isActive = true;
+        this.updatedAt = Instant.now();
+        this.deletedAt = null;
+        return this;
+    }
+
+    public Category deactivate() {
+        if (getDeletedAt() == null) {
+            this.deletedAt = Instant.now();
+        }
+
+        this.isActive = false;
+        this.updatedAt = Instant.now();
+        return this;
     }
 
     public CategoryID getId() {
